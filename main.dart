@@ -11,7 +11,7 @@ void main() {
     stdout.writeln('a LINHA COLUNA → abrir  |  f LINHA COLUNA → flag  |  s → sair');
     campo.mostrar();
 
-    if (campo.explodiu) { stdout.writeln('\nBoom! Você perdeu.'); break; }
+    if (campo.explodiu) { stdout.writeln('\nFAAAHH! Você perdeu.'); break; }
     if (campo.limpo)    { stdout.writeln('\nParabéns! Você venceu!'); break; }
 
     stdout.write('\n> ');
@@ -44,10 +44,10 @@ class Celula {
   bool mina = false;
   bool marcada = false;
   bool revelada = false;
-  String icone = "⬜";
+  String icone = "🔳";
 
-  static const String iconeMina  = "💣";
-  static const String iconeMarca = "🚩";
+  static const String iconeMina  = "💥";
+  static const String iconeMarca = "📍";
 
   @override
   String toString() {
