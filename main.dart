@@ -111,4 +111,78 @@ class Campo {
     }
     _minasGeradas = true;
   }
-  
+  int _vizinhos(int i, int j) {
+    int total = 0;
+    for (int di = -1; di <= 1; di++) {
+      for (int dj = -1; dj <= 1; dj++) {
+        int ni = i + di, nj = j + dj;
+        if (valido(ni, nj) && grid[ni][nj].mina) total++;
+      }
+    }
+    return total;
+  }
+
+  void abrir(int i, int j) {
+    if (encerrado || grid[i][j].revelada || grid[i][j].marcada) return;
+
+    if (!_minasGeradas) _gerarMinas(i, j);
+
+    if (grid[i][j].mina) {
+      explodiu = true;
+      _revelarMinas();
+      return;
+    }
+
+    List<List<int>> fila = [[i, j]];
+
+    while (fila.isNotEmpty) {
+      List<int> pos = fila.removeLast();
+      int ci = pos[0], cj = pos[1];
+
+      if (!valido(ci, cj) || grid[ci][cj].revelada || grid[ci][cj].marcada) continue;
+
+      int v = _vizinhos(ci, cj);
+      grid[ci][cj].revelada = true;
+      grid[ci][cj].icone = v == 0 ? "  " : " $v";
+
+      if (v == 0) {
+        for (int di = -1; di <= 1; di++) {
+          for (int dj = -1; dj <= 1; dj++) {
+            if (di != 0 || dj != 0) fila.add([ci + di, cj + dj]);
+          }
+        }
+      }
+    }
+  }
+
+  void marcar(int i, int j) {
+    if (!grid[i][j].revelada) grid[i][j].marcada = !grid[i][j].marcada;
+  }
+
+  void _revelarMinas() {
+    for (int i = 0; i < tam; i++) {
+      for (int j = 0; j < tam; j++) {
+        if (grid[i][j].mina) {
+          grid[i][j].revelada = true;
+          grid[i][j].icone = Celula.iconeMina;
+        }
+      }
+    }
+  }
+
+  void mostrar() {
+    stdout.write('   ');
+    for (int i = 0; i < tam; i++) {
+      stdout.write((i + 1).toString().padLeft(2) + ' ');
+    }
+    stdout.writeln();
+
+    for (int i = 0; i < tam; i++) {
+      stdout.write((i + 1).toString().padLeft(2) + ' ');
+      for (int j = 0; j < tam; j++) {
+        stdout.write('${grid[i][j]} ');
+      }
+      stdout.writeln();
+    }
+  }
+}
