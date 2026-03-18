@@ -111,3 +111,4 @@ class Campo {
     }
     _minasGeradas = true;
   }
+  
