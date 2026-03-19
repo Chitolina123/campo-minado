@@ -1,14 +1,27 @@
 import 'dart:math';
 import 'dart:io';
 
+const String _esc = '\x1B[';
+const String _reset = '${_esc}0m';
+const String _cyan = '${_esc}36m';
+const String _yellow = '${_esc}33m';
+const String _green = '${_esc}32m';
+const String _bright = '${_esc}1m';
+
 void main() {
-  stdout.write("Dificuldade:\n1 - Fácil\n2 - Médio\n3 - Difícil\nOpção: ");
+  stdout.writeln('$_cyan╔════════════════════╗$_reset');
+  stdout.writeln('$_cyan║${_bright}${_yellow}    MODO DE JOGO    $_reset$_cyan║$_reset');
+  stdout.writeln('$_cyan╠════════════════════╣$_reset');
+  stdout.writeln('$_cyan║${_green} 1 - Casual         $_cyan║$_reset');
+  stdout.writeln('$_cyan║${_green} 2 - Normal         $_cyan║$_reset');
+  stdout.writeln('$_cyan║${_green} 3 - Hardcore       $_cyan║$_reset');
+  stdout.write('$_cyan╚════════════════════╝$_reset\n${_yellow}Opção: $_reset');
   int? nivel = int.tryParse(stdin.readLineSync() ?? '0');
   Campo campo = Campo(nivel);
 
   while (true) {
     stdout.writeln('\n=== CAMPO MINADO ===');
-    stdout.writeln('a LINHA COLUNA → abrir  |  f LINHA COLUNA → flag  |  s → sair');
+    stdout.writeln('d LINHA COLUNA → DESARMAR (ABRIR)  |  m LINHA COLUNA → MARCAR BOMBA  |  a → ABORTAR');
     campo.mostrar();
 
     if (campo.explodiu) { stdout.writeln('\nFAAAHH! Você perdeu.'); break; }
@@ -21,8 +34,8 @@ void main() {
     List<String> partes = entrada.trim().split(RegExp(r'\s+'));
     String cmd = partes[0].toLowerCase();
 
-    if (cmd == 's') break;
-    if (partes.length < 3) { stdout.writeln('Use: a 3 5  ou  f 3 5'); continue; }
+    if (cmd == 'a') break;
+    if (partes.length < 3) { stdout.writeln('Use: d 3 5  ou  m 3 5'); continue; }
 
     int? lin = int.tryParse(partes[1]);
     int? col = int.tryParse(partes[2]);
@@ -34,8 +47,8 @@ void main() {
 
     if (!campo.valido(i, j)) { stdout.writeln('Fora do tabuleiro.'); continue; }
 
-    if (cmd == 'a')      campo.abrir(i, j);
-    else if (cmd == 'f') campo.marcar(i, j);
+    if (cmd == 'd')      campo.abrir(i, j);
+    else if (cmd == 'm') campo.marcar(i, j);
     else                 stdout.writeln('Comando inválido.');
   }
 }
